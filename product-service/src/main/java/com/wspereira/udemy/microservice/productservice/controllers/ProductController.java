@@ -23,8 +23,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product detalle(@PathVariable Long id){// throws InterruptedException {
-      //  Thread.sleep(2000L);
+    public Product detalle(@PathVariable Long id) throws InterruptedException {
+        Thread.sleep(2000L);
         
         return productService.findById(id);
     }

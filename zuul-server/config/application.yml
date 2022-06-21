@@ -11,4 +11,8 @@ zuul:
         items:
           service-id: item-service
           path: /api/items/**  
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 20000
+ribbon:
+  ConnectTimeout: 3000
+  ReadTimeout: 60000          
         
