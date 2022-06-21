@@ -1,5 +1,9 @@
 server.port: 8090
 spring.application.name: eureka-server-service
-eureka.client:
+eureka:
+  client:
     register-with-eureka: false
     fetch-registry: false
+  server.enableSelfPreservation: false
+   
+  

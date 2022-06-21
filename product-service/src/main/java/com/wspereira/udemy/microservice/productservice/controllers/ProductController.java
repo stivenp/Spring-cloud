@@ -24,6 +24,9 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Product detalle(@PathVariable Long id) {
+        boolean ok =false;
+        if(!ok){
+        throw new RuntimeException("No se pudo");}
         return productService.findById(id);
     }
     

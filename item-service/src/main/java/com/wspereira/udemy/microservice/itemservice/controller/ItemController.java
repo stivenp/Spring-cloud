@@ -5,7 +5,9 @@
  */
 package com.wspereira.udemy.microservice.itemservice.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.wspereira.udemy.microservice.itemservice.model.Item;
+import com.wspereira.udemy.microservice.itemservice.model.Product;
 import com.wspereira.udemy.microservice.itemservice.model.service.ItemService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +32,20 @@ public class ItemController {
     public List<Item> getAll(){
     return itemService.getItems();
     }
+    @HystrixCommand(fallbackMethod = "metodoAlternativo")
     @GetMapping("{id}/amount/{amount}")
     public Item detalle(@PathVariable Long id,@PathVariable Integer amount){
     return itemService.getItem(id, amount);
     }
+    public Item metodoAlternativo(Long id, Integer amount){
+    Item item= new Item();
+    Product producto= new Product();
+    item.setAmount(amount);
+    producto.setId(id);
+    producto.setName("xxxx");
+    producto.setPrice(0);
+    item.setProduct(producto);
+    return item;
+    }
+    
 }
