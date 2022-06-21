@@ -11,6 +11,10 @@ spring:
               uri: lb://product-service
               predicates:
                 - Path=/api/products/** 
+                - Header= token,123456
+                - Method=GET,POST
+                - Query=color,verde
+                - Cookie=color,azul
               filters:
                - StripPrefix=2
                - Ejemplo= mensaje personalizado,usuario ,wspereira
@@ -25,6 +29,9 @@ spring:
                 - Path=/api/items/**
               filters:
                - StripPrefix= 2 
+               - AddRequestHeader=token-request,123456
+               - AddResponseHeader=token-response,654321
+               - AddRequestParameter=nombre,andres
                
                 
 #hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 20000
