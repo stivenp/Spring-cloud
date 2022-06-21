@@ -13,13 +13,19 @@ spring:
                 - Path=/api/products/** 
               filters:
                - StripPrefix=2
-               
+               - Ejemplo= mensaje personalizado,usuario ,wspereira
+#               - name: Ejemplo
+#                 args: 
+#                    - mensaje: mensaje personalizado
+#                    - cookieValue: wspereira 
+#                    - cookieName: usuario
             - id :  item-service
               uri: lb://item-service
               predicates:
                 - Path=/api/items/**
               filters:
-               - StripPrefix= 2  
+               - StripPrefix= 2 
+               
                 
 #hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 20000
 #ribbon:
