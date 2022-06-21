@@ -23,10 +23,9 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product detalle(@PathVariable Long id) {
-        boolean ok =false;
-        if(!ok){
-        throw new RuntimeException("No se pudo");}
+    public Product detalle(@PathVariable Long id){// throws InterruptedException {
+      //  Thread.sleep(2000L);
+        
         return productService.findById(id);
     }
     

@@ -37,6 +37,7 @@ public class ItemController {
     public Item detalle(@PathVariable Long id,@PathVariable Integer amount){
     return itemService.getItem(id, amount);
     }
+    
     public Item metodoAlternativo(Long id, Integer amount){
     Item item= new Item();
     Product producto= new Product();

@@ -24,7 +24,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> getItems() {
         List<Product> products
-                = Arrays.asList(restTemplate.getForObject("product-service/products", Product[].class)); // Tools
+                = Arrays.asList(restTemplate.getForObject("http://product-service/products", Product[].class)); // Tools
         // |
         return products.stream().map(p -> new Item(p, 1)).collect(Collectors.toList()); // Templates.
     }

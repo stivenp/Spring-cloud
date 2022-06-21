@@ -1,0 +1,14 @@
+server.port: 8092
+spring:
+  application:
+    name: zuul-server
+eureka.client.service-url.defaultZone : http://localhost:8090/eureka
+zuul:
+    routes:
+        productos:
+          service-id: product-service
+          path: /api/products/**        
+        items:
+          service-id: item-service
+          path: /api/items/**  
+        
