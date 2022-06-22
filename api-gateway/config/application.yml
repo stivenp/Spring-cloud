@@ -11,10 +11,10 @@ spring:
               uri: lb://product-service
               predicates:
                 - Path=/api/products/** 
-                - Header= token,123456
-                - Method=GET,POST
-                - Query=color,verde
-                - Cookie=color,azul
+#                - Header= token,123456
+#                - Method=GET,POST
+#                - Query=color,verde
+#                - Cookie=color,azul
               filters:
                - StripPrefix=2
                - Ejemplo= mensaje personalizado,usuario ,wspereira

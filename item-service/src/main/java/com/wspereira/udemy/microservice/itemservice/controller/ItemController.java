@@ -5,13 +5,14 @@
  */
 package com.wspereira.udemy.microservice.itemservice.controller;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.wspereira.udemy.microservice.itemservice.model.Item;
 import com.wspereira.udemy.microservice.itemservice.model.Product;
 import com.wspereira.udemy.microservice.itemservice.model.service.ItemService;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,30 +24,38 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/item")
+@Slf4j
 public class ItemController {
+
     @Autowired
     @Qualifier(value = "itemService")
     private ItemService itemService;
     
+    @Autowired
+    private CircuitBreakerFactory circuitBreakerFactory;
+    
     @GetMapping
-    public List<Item> getAll(){
-    return itemService.getItems();
+    public List<Item> getAll() {
+        return itemService.getItems();
     }
-    @HystrixCommand(fallbackMethod = "metodoAlternativo")
+
+    //@HystrixCommand(fallbackMethod = "metodoAlternativo")
     @GetMapping("{id}/amount/{amount}")
-    public Item detalle(@PathVariable Long id,@PathVariable Integer amount){
-    return itemService.getItem(id, amount);
+    public Item detalle(@PathVariable Long id, @PathVariable Integer amount) {
+        return circuitBreakerFactory.create("items")
+                .run(() -> itemService.getItem(id, amount));//, e -> metodoAlternativo(id, amount, e));
     }
     
-    public Item metodoAlternativo(Long id, Integer amount){
-    Item item= new Item();
-    Product producto= new Product();
-    item.setAmount(amount);
-    producto.setId(id);
-    producto.setName("xxxx");
-    producto.setPrice(0);
-    item.setProduct(producto);
-    return item;
+    public Item metodoAlternativo(Long id, Integer amount, Throwable e) {
+        log.debug("Error {}", e.getMessage());
+        Item item = new Item();
+        Product producto = new Product();
+        item.setAmount(amount);
+        producto.setId(id);
+        producto.setName("xxxx");
+        producto.setPrice(0);
+        item.setProduct(producto);
+        return item;
     }
     
 }

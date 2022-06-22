@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wspereira.udemy.microservice.productservice.models.entity.Product;
 import com.wspereira.udemy.microservice.productservice.models.service.IProductService;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/products")
@@ -24,9 +25,16 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Product detalle(@PathVariable Long id) throws InterruptedException {
-        Thread.sleep(2000L);
-        
+        // romper
+        if (id.equals(10l)) {
+            throw new IllegalStateException("Producto no encontrado");
+        }
+        //genera un timeout
+        if (id.equals(7L)) {
+            TimeUnit.SECONDS.sleep(5L);
+        }
+
         return productService.findById(id);
     }
-    
+
 }
