@@ -15,7 +15,16 @@ spring:
               uri: lb://product-service
               #son predicados para hacer validaciones en la ruta
               predicates:
-                - CircuitBreaker=productos
+                #solo funciona timeout 
+                #- CircuitBreaker=productos
+                #poniendo el filtro de esta forma fucniona timeout y tolerancia a fallos
+                - name: CircuitBreaker
+                  args:
+                    name: productos
+                    #separado por coma si tiene mas status code example 500,404,...
+                    statusCodes: 500
+                    #para poner ruta alternativa  a otro servicio distinto de productos
+                    fallbackUri: foward:/api/items/ver/9/cantidad/5
                   #la ruta sera todos los url que empiezen por /api/productos/ ....
                 - Path=/api/products/** 
 #                - Header= token,123456
