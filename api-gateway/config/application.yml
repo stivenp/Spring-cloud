@@ -9,9 +9,18 @@ spring:
        #configurando rutas de gateway 
        gateway: 
           routes:
+            - id : oauth-service
+              uri: lb://oauth-service
+              predicates:
+                - Path=/api/security/**
+              filters: 
+                - StripPrefix=2  
+                - RemoveRequestHeader=Cookiee
+                - RemoveRequestHeader=Set-Cookie
+                
             - id : user-service
               uri: lb://user-service
-              predicate:
+              predicates:
                - Path=/api/user/**  
               filters: 
                 - StripPrefix=2
@@ -22,6 +31,24 @@ spring:
               uri: lb://product-service
               #son predicados para hacer validaciones en la ruta
               predicates:
+                   #la ruta sera todos los url que empiezen por /api/productos/ ....
+                - Path=/api/products/** 
+#                - Header= token,123456
+#                - Method=GET,POST
+#                - Query=color,verde
+#                - Cookie=color,azul
+            # filtros qu se pueden aplicar predefinidos o customizados
+              filters:
+                  #esto es para decir que el prefijo de la ruta sera de 2 path. si vemos configuramos que nuestro path sera /api/productos
+                - StripPrefix=2
+                #nuestro filtro customizado en java
+                - Ejemplo= mensaje personalizado,usuario ,wspereira            
+                #otra forma de llamar al filtro customizado ejemplo de java
+#               - name: Ejemplo
+#                 args: 
+#                    - mensaje: mensaje personalizado
+#                    - cookieValue: wspereira 
+#                    - cookieName: usuario
                 #solo funciona timeout 
                 #- CircuitBreaker=productos
                 #poniendo el filtro de esta forma fucniona timeout y tolerancia a fallos
@@ -32,24 +59,11 @@ spring:
                     statusCodes: 500
                     #para poner ruta alternativa  a otro servicio distinto de productos
                     fallbackUri: foward:/api/items/ver/9/cantidad/5
-                  #la ruta sera todos los url que empiezen por /api/productos/ ....
-                - Path=/api/products/** 
-#                - Header= token,123456
-#                - Method=GET,POST
-#                - Query=color,verde
-#                - Cookie=color,azul
-              # filtros qu se pueden aplicar predefinidos o customizados
-              filters:
-                #esto es para decir que el prefijo de la ruta sera de 2 path. si vemos configuramos que nuestro path sera /api/productos
-               - StripPrefix=2
-               #nuestro filtro customizado en java
-               - Ejemplo= mensaje personalizado,usuario ,wspereira
-               #otra forma de llamar al filtro customizado ejemplo de java
-#               - name: Ejemplo
-#                 args: 
-#                    - mensaje: mensaje personalizado
-#                    - cookieValue: wspereira 
-#                    - cookieName: usuario
+                 
+              
+                
+               
+
             - id :  item-service
               uri: lb://item-service
               predicates:
@@ -85,9 +99,9 @@ resilience4j:
     # configurando el timeout        
     timelimiter:
         configs:
-            defecto:
+          defecto:
                 #tiempo que se considera como time out
-                timeout-durartion: 6s
+                timeout-duration: 6s
         #intancias de circuitos creados en codigo         
         instances:
             productos:
