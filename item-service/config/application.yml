@@ -36,9 +36,9 @@ resilience4j:
     # configurando el timeout        
     timelimiter:
         configs:
-            defecto:
-                #tiempo que se considera como time out
-                timeout-durartion: 6s
+          defecto:
+            #tiempo que se considera como time out
+            timeout-duration: 6s
         #intancias de circuitos creados en codigo         
         instances:
             items:
