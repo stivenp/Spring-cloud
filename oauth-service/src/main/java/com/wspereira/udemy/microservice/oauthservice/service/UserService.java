@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
-public class UserService implements UserDetailsService {
+public class UserService implements IUserService,UserDetailsService {
     
     @Autowired
     private UsuarioFeignClient client;
@@ -44,6 +44,11 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
         log.debug("usuario authenticado {}", username);
         return new User(usuario.getUsername(), usuario.getPassword(), usuario.getEnabled(), true, true, true, authorities);
+    }
+
+    @Override
+    public UserDe findByUsername(String username) {
+       return client.findByUsername(username);
     }
     
 }
