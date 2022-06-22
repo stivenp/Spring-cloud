@@ -25,7 +25,7 @@ public class SpringSecutiryConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    public static BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -43,7 +43,5 @@ public class SpringSecutiryConfig extends WebSecurityConfigurerAdapter {
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager(); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
 
 }
