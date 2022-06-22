@@ -11,7 +11,6 @@ import com.wspereira.udemy.microservice.itemservice.model.Product;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,30 +25,30 @@ public class ItemServiceFeign implements ItemService {
 
     @Override
     public List<Item> getItems() {
-        
-        return productClientRest.getAll().stream().map(p -> new Item(p, 1)).collect(Collectors.toList()); 
+
+        return productClientRest.getAll().stream().map(p -> new Item(p, 1)).collect(Collectors.toList());
 
     }
 
     @Override
     public Item getItem(Long id, Integer amount) {
-        
-        return new Item( productClientRest.detalle(id), amount);
+
+        return new Item(productClientRest.detalle(id), amount);
     }
 
     @Override
     public Product save(Product product) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return productClientRest.create(product);
     }
 
     @Override
     public Product update(Product pro, Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return productClientRest.edit(pro, id);
     }
 
     @Override
     public void delete(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        productClientRest.delete(id);
     }
 
 }

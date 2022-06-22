@@ -17,9 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -54,20 +60,21 @@ public class ItemController {
     }
 
     //Nombre de configuracion yml - solo toma la configuracion del yml
-    @CircuitBreaker(name = "items",fallbackMethod = "metodoAlternativo")
+    @CircuitBreaker(name = "items", fallbackMethod = "metodoAlternativo")
     @GetMapping("{id}/amount/{amount}/anotacion")
     public Item circuiteBreakAnotacion(@PathVariable Long id, @PathVariable Integer amount) {
         return itemService.getItem(id, amount);
     }
-    
+
     //Nombre de configuracion yml - solo toma la configuracion del yml
     //toca envolver la llamada en un completable future para contabilizar el tiempo
     //Este metodo no hace corto circuito si no que manda un timeOut siempre.
-    @TimeLimiter(name = "items",fallbackMethod = "metodoAlternativoFuture")
+    @TimeLimiter(name = "items", fallbackMethod = "metodoAlternativoFuture")
     @GetMapping("{id}/amount/{amount}/timeLimiter")
     public CompletableFuture<Item> timeLimiter(@PathVariable Long id, @PathVariable Integer amount) {
-        return CompletableFuture.supplyAsync(()->itemService.getItem(id, amount));
+        return CompletableFuture.supplyAsync(() -> itemService.getItem(id, amount));
     }
+
     //Nombre de configuracion yml - solo toma la configuracion del yml
     //toca envolver la llamada en un completable future para contabilizar el tiempo
     //Este metodo no hace corto circuito si no que manda un timeOut siempre.
@@ -75,31 +82,34 @@ public class ItemController {
     //funciona el circuit break solo para timeout para excecpciones por errores no entraria a cicuitrbreak
     //Para que  funcione entre los dos solo se debe dejar el fallback en circuitbreak o en ninguno de los dos 
     //No funciona la toleracia a fallos solo funciona el timeout
-    @CircuitBreaker(name = "items",fallbackMethod = "metodoAlternativoFuture")
-    @TimeLimiter(name = "items",fallbackMethod = "metodoAlternativoFuture")
+    @CircuitBreaker(name = "items", fallbackMethod = "metodoAlternativoFuture")
+    @TimeLimiter(name = "items", fallbackMethod = "metodoAlternativoFuture")
     @GetMapping("{id}/amount/{amount}/timeLimiterCombine")
     public CompletableFuture<Item> combineOnlyCircuitTimeOut(@PathVariable Long id, @PathVariable Integer amount) {
-        return CompletableFuture.supplyAsync(()->itemService.getItem(id, amount));
+        return CompletableFuture.supplyAsync(() -> itemService.getItem(id, amount));
     }
+
     //Nombre de configuracion yml - solo toma la configuracion del yml
     //toca envolver la llamada en un completable future para contabilizar el tiempo
     //Este metodo no hace corto circuito si no que manda un timeOut siempre.
     //Si se anota con circuitbreak tambien. ahi s i tendria el comportamiento de circuitbreak
     //funciona el circuit break solo para timeout para excecpciones por errores no entraria a cicuitrbreak
     //Para que  funcione entre los dos solo se debe dejar el fallback en circuitbreak o en ninguno de los dos 
-    @CircuitBreaker(name = "items",fallbackMethod = "metodoAlternativoFuture")
+    @CircuitBreaker(name = "items", fallbackMethod = "metodoAlternativoFuture")
     @TimeLimiter(name = "items")
     @GetMapping("{id}/amount/{amount}/combine")
     public CompletableFuture<Item> combineExitoso(@PathVariable Long id, @PathVariable Integer amount) {
-        return CompletableFuture.supplyAsync(()->itemService.getItem(id, amount));
+        return CompletableFuture.supplyAsync(() -> itemService.getItem(id, amount));
     }
+
     /**
-     * Metodo fallback para dar respuesta al timeLimiterr
-     * tiene que ser futuro para poder calcular el time 
+     * Metodo fallback para dar respuesta al timeLimiterr tiene que ser futuro
+     * para poder calcular el time
+     *
      * @param id
      * @param amount
      * @param e
-     * @return 
+     * @return
      */
     public CompletableFuture<Item> metodoAlternativoFuture(Long id, Integer amount, Throwable e) {
         log.debug("Error {}", e.getMessage());
@@ -110,16 +120,17 @@ public class ItemController {
         producto.setName("xxxx");
         producto.setPrice(0);
         item.setProduct(producto);
-        return CompletableFuture.supplyAsync(()->item);
+        return CompletableFuture.supplyAsync(() -> item);
     }
-    
+
     /**
-     * Metodo fallback para dar respuesta si el circuitbreak esta abierto
-     * y generando error
+     * Metodo fallback para dar respuesta si el circuitbreak esta abierto y
+     * generando error
+     *
      * @param id
      * @param amount
      * @param e
-     * @return 
+     * @return
      */
     public Item metodoAlternativo(Long id, Integer amount, Throwable e) {
         log.debug("Error {}", e.getMessage());
@@ -131,6 +142,26 @@ public class ItemController {
         producto.setPrice(0);
         item.setProduct(producto);
         return item;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Product crear(@RequestBody Product pro) {
+        return itemService.save(pro);
+
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Product edit(@RequestBody Product pro, @PathVariable Long id) {
+        
+        return itemService.update(pro, id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        itemService.delete(id);
     }
 
 }
