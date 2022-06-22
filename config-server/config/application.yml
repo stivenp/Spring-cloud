@@ -7,5 +7,6 @@ spring:
      config:
       server:
         git:
-          uri: file:///C:/Users/stive/Documents/Proyectos/Spring-cloud/config      
-   
+          default-label: master 
+          uri: https://github.com/stivenp/config.git      
+ 
