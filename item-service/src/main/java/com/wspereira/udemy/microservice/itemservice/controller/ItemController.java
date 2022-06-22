@@ -43,7 +43,7 @@ public class ItemController {
     @GetMapping("{id}/amount/{amount}")
     public Item detalle(@PathVariable Long id, @PathVariable Integer amount) {
         return circuitBreakerFactory.create("items")
-                .run(() -> itemService.getItem(id, amount));//, e -> metodoAlternativo(id, amount, e));
+                .run(() -> itemService.getItem(id, amount), e -> metodoAlternativo(id, amount, e));
     }
     
     public Item metodoAlternativo(Long id, Integer amount, Throwable e) {

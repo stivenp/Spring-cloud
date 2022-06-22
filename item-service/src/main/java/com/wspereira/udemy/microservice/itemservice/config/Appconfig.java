@@ -32,7 +32,9 @@ public class Appconfig {
                                             .waitDurationInOpenState(Duration.ofSeconds(10L))
                                             .permittedNumberOfCallsInHalfOpenState(5)
                                             .build())
-                                    .timeLimiterConfig(TimeLimiterConfig.ofDefaults())
+                                    .timeLimiterConfig(TimeLimiterConfig.custom()
+                                        .timeoutDuration(Duration.ofSeconds(2L))
+                                        .build())
                                     .build();
 
                         });
