@@ -57,11 +57,23 @@ public class ItemController {
     public Item circuiteBreakAnotacion(@PathVariable Long id, @PathVariable Integer amount) {
         return itemService.getItem(id, amount);
     }
+    
     //Nombre de configuracion yml - solo toma la configuracion del yml
     //toca envolver la llamada en un completable future para contabilizar el tiempo
+    //Este metodo no hace corto circuito si no que manda un timeOut siempre.
     @TimeLimiter(name = "items",fallbackMethod = "metodoAlternativoFuture")
     @GetMapping("{id}/amount/{amount}/timeLimiter")
     public CompletableFuture<Item> timeLimiter(@PathVariable Long id, @PathVariable Integer amount) {
+        return CompletableFuture.supplyAsync(()->itemService.getItem(id, amount));
+    }
+    //Nombre de configuracion yml - solo toma la configuracion del yml
+    //toca envolver la llamada en un completable future para contabilizar el tiempo
+    //Este metodo no hace corto circuito si no que manda un timeOut siempre.
+    //Si se anota con circuitbreak tambien. ahi s i tendria el comportamiento de circuitbreak
+    @CircuitBreaker(name = "items",fallbackMethod = "metodoAlternativoFuture")
+    @TimeLimiter(name = "items",fallbackMethod = "metodoAlternativoFuture")
+    @GetMapping("{id}/amount/{amount}/timeLimiterCombine")
+    public CompletableFuture<Item> timeLimiterCombineCircuit(@PathVariable Long id, @PathVariable Integer amount) {
         return CompletableFuture.supplyAsync(()->itemService.getItem(id, amount));
     }
     /**
