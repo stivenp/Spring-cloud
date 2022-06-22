@@ -36,6 +36,13 @@ public class IProductServiceImpl implements IProductService {
         return (List<Product>) productRepository.findAll();
     }
 
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        log.info("detele  product: {}", id);
+        productRepository.deleteById(id);
+    }
+
 }
 
 

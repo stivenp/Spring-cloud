@@ -10,6 +10,7 @@ public interface IProductService {
     Product save(Product product);
 
     List<Product> findAll();
-
+    
+    void deleteById(Long id);
 
 }

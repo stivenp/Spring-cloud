@@ -10,6 +10,12 @@ import com.wspereira.udemy.microservice.productservice.models.entity.Product;
 import com.wspereira.udemy.microservice.productservice.models.service.IProductService;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
 @RequestMapping("/products")
@@ -35,6 +41,28 @@ public class ProductController {
         }
 
         return productService.findById(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Product create(@RequestBody Product pro) {
+
+        return productService.save(pro);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Product edit(@RequestBody Product pro, @PathVariable Long id) {
+        Product findById = productService.findById(id);
+        findById.setName(pro.getName());
+        findById.setPrice(pro.getPrice());
+        return productService.save(findById);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        productService.deleteById(id);
     }
 
 }
