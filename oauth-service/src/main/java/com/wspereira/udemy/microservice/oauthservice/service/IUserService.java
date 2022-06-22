@@ -13,4 +13,6 @@ import com.wspereira.udemy.microservice.oauthservice.model.dto.UserDe;
  */
 public interface IUserService {
     public UserDe findByUsername(String username);
+    
+    public UserDe update( UserDe usuario, Long id);
 }

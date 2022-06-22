@@ -29,5 +29,7 @@ public class UserDe implements Serializable {
     private String email;
 
     private List<Rol> roles;
+    
+    private Integer intentos;
 
 }

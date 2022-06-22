@@ -8,6 +8,9 @@ package com.wspereira.udemy.microservice.oauthservice.clients;
 import com.wspereira.udemy.microservice.oauthservice.model.dto.UserDe;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -19,4 +22,7 @@ public interface UsuarioFeignClient {
 
     @GetMapping("/user/search/findUser")
     public UserDe findByUsername(@RequestParam(name = "name") String name);
+
+    @PutMapping("user/{id}")
+    public UserDe update(@RequestBody UserDe usuario, @PathVariable Long id);
 }

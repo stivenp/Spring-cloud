@@ -45,4 +45,6 @@ public class User implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Rol> roles;
 
+    private Integer intentos;
+
 }
