@@ -7,6 +7,7 @@ package com.wspereira.udemy.microservice.itemservice.model.service;
 
 import com.wspereira.udemy.microservice.itemservice.client.ProductClientRest;
 import com.wspereira.udemy.microservice.itemservice.model.Item;
+import com.wspereira.udemy.microservice.itemservice.model.Product;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,21 @@ public class ItemServiceFeign implements ItemService {
     public Item getItem(Long id, Integer amount) {
         
         return new Item( productClientRest.detalle(id), amount);
+    }
+
+    @Override
+    public Product save(Product product) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Product update(Product pro, Long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(Long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
