@@ -9,6 +9,13 @@ spring:
        #configurando rutas de gateway 
        gateway: 
           routes:
+            - id : user-service
+              uri: lb://user-service
+              predicate:
+               - Path=/api/user/**  
+              filters: 
+                - StripPrefix=2
+                  
               #nombre registrado del servicio en eureka que va a consumir
             - id :  product-service
             # el lb es para decir que se hara un loadbalance a las rutas del servicio produc-service
