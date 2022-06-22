@@ -70,10 +70,24 @@ public class ItemController {
     //toca envolver la llamada en un completable future para contabilizar el tiempo
     //Este metodo no hace corto circuito si no que manda un timeOut siempre.
     //Si se anota con circuitbreak tambien. ahi s i tendria el comportamiento de circuitbreak
+    //funciona el circuit break solo para timeout para excecpciones por errores no entraria a cicuitrbreak
+    //Para que  funcione entre los dos solo se debe dejar el fallback en circuitbreak o en ninguno de los dos 
     @CircuitBreaker(name = "items",fallbackMethod = "metodoAlternativoFuture")
     @TimeLimiter(name = "items",fallbackMethod = "metodoAlternativoFuture")
     @GetMapping("{id}/amount/{amount}/timeLimiterCombine")
-    public CompletableFuture<Item> timeLimiterCombineCircuit(@PathVariable Long id, @PathVariable Integer amount) {
+    public CompletableFuture<Item> combineOnlyCircuitTimeOut(@PathVariable Long id, @PathVariable Integer amount) {
+        return CompletableFuture.supplyAsync(()->itemService.getItem(id, amount));
+    }
+    //Nombre de configuracion yml - solo toma la configuracion del yml
+    //toca envolver la llamada en un completable future para contabilizar el tiempo
+    //Este metodo no hace corto circuito si no que manda un timeOut siempre.
+    //Si se anota con circuitbreak tambien. ahi s i tendria el comportamiento de circuitbreak
+    //funciona el circuit break solo para timeout para excecpciones por errores no entraria a cicuitrbreak
+    //Para que  funcione entre los dos solo se debe dejar el fallback en circuitbreak o en ninguno de los dos 
+    @CircuitBreaker(name = "items",fallbackMethod = "metodoAlternativoFuture")
+    @TimeLimiter(name = "items")
+    @GetMapping("{id}/amount/{amount}/combine")
+    public CompletableFuture<Item> combineExitoso(@PathVariable Long id, @PathVariable Integer amount) {
         return CompletableFuture.supplyAsync(()->itemService.getItem(id, amount));
     }
     /**
