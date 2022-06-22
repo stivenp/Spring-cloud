@@ -8,6 +8,7 @@ package com.wspereira.udemy.microservice.itemservice.controller;
 import com.wspereira.udemy.microservice.itemservice.model.Item;
 import com.wspereira.udemy.microservice.itemservice.model.Product;
 import com.wspereira.udemy.microservice.itemservice.model.service.ItemService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,10 @@ public class ItemController {
     @Autowired
     @Qualifier(value = "itemService")
     private ItemService itemService;
-    
+
     @Autowired
     private CircuitBreakerFactory circuitBreakerFactory;
-    
+
     @GetMapping
     public List<Item> getAll() {
         return itemService.getItems();
@@ -42,10 +43,26 @@ public class ItemController {
     //@HystrixCommand(fallbackMethod = "metodoAlternativo")
     @GetMapping("{id}/amount/{amount}")
     public Item detalle(@PathVariable Long id, @PathVariable Integer amount) {
+        //Creando configuracion manual /toma la configuracion de la clase si no tiene yml
+        // si tiene yml toma la configuracionn del yml como principal
         return circuitBreakerFactory.create("items")
                 .run(() -> itemService.getItem(id, amount), e -> metodoAlternativo(id, amount, e));
     }
-    
+
+    //Nombre de configuracion yml - solo toma la configuracion del yml
+    @CircuitBreaker(name = "items",fallbackMethod = "metodoAlternativo")
+    @GetMapping("{id}/amount/{amount}/anotacion")
+    public Item detalle2(@PathVariable Long id, @PathVariable Integer amount) {
+        return itemService.getItem(id, amount);
+    }
+    /**
+     * Metodo fallback para dar respuesta si el circuitbreak esta abierto
+     * y generando error
+     * @param id
+     * @param amount
+     * @param e
+     * @return 
+     */
     public Item metodoAlternativo(Long id, Integer amount, Throwable e) {
         log.debug("Error {}", e.getMessage());
         Item item = new Item();
@@ -57,5 +74,5 @@ public class ItemController {
         item.setProduct(producto);
         return item;
     }
-    
+
 }

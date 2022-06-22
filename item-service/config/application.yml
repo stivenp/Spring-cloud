@@ -1,38 +1,52 @@
-
+#archivo para darle nome a la aplicaciòn. este nombre servira para recconocerlo en eureka
 spring:
   application:
     name: item-service
   #config.import: optional:configserver  
+#haciendo que el puerto sea random cada vez que arranca la app  
 server.port: ${PORT:0}
 eureka:
+    #donde esta ubicado nuestro servicio eureka para registrarse y descubrimiento
     client.service-url.defaultZone : http://localhost:8090/eureka
+    #creando una intancia randon en eureka por cada instancia levantada
     instance.instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}    
 
+#Configurando la resilencia y circuitbreak;
 resilience4j:
     circuitbreaker:
         configs:
             defecto:
-                sliding-window-size: 6
+                #ventana deslizaante. rango que tomara de muestreo
+                sliding-window-size: 6 
+                # porcentaje de fallos que tomara para abrir el circuito
                 failure-rate-threshold: 50
+                #duracion que durara en estado abierto para pasar a semi abierto
                 wait-duration-in-open-state: 20s
+                #numero de llamadas que permitira pasar para el estado semi abierto . tomando
+                #el porcentaje para volver abrir el circuitor
                 permitted-number-of-calls-in-half-open-state: 4
+                # porcentaje de la muestra que tomara para ver si son llamadas lentas
                 slow-call-rate-threshold: 50
+                # que se considera como llamada lenta 
                 slow-call-duration-threshold: 2s
-                
+        #intancias de circuitos creados en codigo         
         instances:
             items: 
              base-config: defecto
+    # configurando el timeout        
     timelimiter:
         configs:
             defecto:
+                #tiempo que se considera como time out
                 timeout-durartion: 6s
+        #intancias de circuitos creados en codigo         
         instances:
             items:
                base-config: defecto 
              
                 
-                
-hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 20000
-ribbon:
-  ConnectTimeout: 3000
-  ReadTimeout: 60000
+#esto era para configurar histrys y ribbon para la tolerancia a fallo y circuit break                
+#hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 20000
+#ribbon:
+#  ConnectTimeout: 3000
+#  ReadTimeout: 60000
