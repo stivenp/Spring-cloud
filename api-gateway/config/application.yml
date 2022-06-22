@@ -1,23 +1,34 @@
 server.port: 8092
-
+#Conectarse al cliente eureka servidor de registro y descubrimiento
 eureka.client.service-url.defaultZone : http://localhost:8090/eureka
 spring:
+    #nombre de la aplicacion con que se registrara en eureka
     application:
         name: gatteway-server
     cloud: 
+       #configurando rutas de gateway 
        gateway: 
           routes:
+              #nombre registrado del servicio en eureka que va a consumir
             - id :  product-service
+            # el lb es para decir que se hara un loadbalance a las rutas del servicio produc-service
               uri: lb://product-service
+              #son predicados para hacer validaciones en la ruta
               predicates:
+                - CircuitBreaker=productos
+                  #la ruta sera todos los url que empiezen por /api/productos/ ....
                 - Path=/api/products/** 
 #                - Header= token,123456
 #                - Method=GET,POST
 #                - Query=color,verde
 #                - Cookie=color,azul
+              # filtros qu se pueden aplicar predefinidos o customizados
               filters:
+                #esto es para decir que el prefijo de la ruta sera de 2 path. si vemos configuramos que nuestro path sera /api/productos
                - StripPrefix=2
+               #nuestro filtro customizado en java
                - Ejemplo= mensaje personalizado,usuario ,wspereira
+               #otra forma de llamar al filtro customizado ejemplo de java
 #               - name: Ejemplo
 #                 args: 
 #                    - mensaje: mensaje personalizado
@@ -33,9 +44,38 @@ spring:
                - AddResponseHeader=token-response,654321
                - AddRequestParameter=nombre,andres
                
+#Configurando la resilencia y circuitbreak;
+resilience4j:
+    circuitbreaker:
+        configs:
+            defecto:
+                #ventana deslizaante. rango que tomara de muestreo
+                sliding-window-size: 6 
+                # porcentaje de fallos que tomara para abrir el circuito
+                failure-rate-threshold: 50
+                #duracion que durara en estado abierto para pasar a semi abierto
+                wait-duration-in-open-state: 20s
+                #numero de llamadas que permitira pasar para el estado semi abierto . tomando
+                #el porcentaje para volver abrir el circuitor
+                permitted-number-of-calls-in-half-open-state: 4
+                # porcentaje de la muestra que tomara para ver si son llamadas lentas
+                slow-call-rate-threshold: 50
+                # que se considera como llamada lenta 
+                slow-call-duration-threshold: 2s
+        #intancias de circuitos creados en codigo         
+        instances:
+            productos: 
+             base-config: defecto
+    # configurando el timeout        
+    timelimiter:
+        configs:
+            defecto:
+                #tiempo que se considera como time out
+                timeout-durartion: 6s
+        #intancias de circuitos creados en codigo         
+        instances:
+            productos:
+               base-config: defecto 
                 
-#hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 20000
-#ribbon:
-#  ConnectTimeout: 3000
-#  ReadTimeout: 60000          
+        
         

@@ -72,6 +72,7 @@ public class ItemController {
     //Si se anota con circuitbreak tambien. ahi s i tendria el comportamiento de circuitbreak
     //funciona el circuit break solo para timeout para excecpciones por errores no entraria a cicuitrbreak
     //Para que  funcione entre los dos solo se debe dejar el fallback en circuitbreak o en ninguno de los dos 
+    //No funciona la toleracia a fallos solo funciona el timeout
     @CircuitBreaker(name = "items",fallbackMethod = "metodoAlternativoFuture")
     @TimeLimiter(name = "items",fallbackMethod = "metodoAlternativoFuture")
     @GetMapping("{id}/amount/{amount}/timeLimiterCombine")
