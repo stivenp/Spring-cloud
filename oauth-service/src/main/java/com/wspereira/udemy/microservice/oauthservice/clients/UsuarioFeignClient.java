@@ -18,5 +18,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface UsuarioFeignClient {
 
     @GetMapping("/user/search/findUser")
-    public UserDe findByUsername(@RequestParam String name);
+    public UserDe findByUsername(@RequestParam(name = "name") String name);
 }

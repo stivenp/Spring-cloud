@@ -7,6 +7,8 @@ package com.wspereira.udemy.microservice.oauthservice.security;
 
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,10 +26,16 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
  *
  * @author stive
  */
+@RefreshScope
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
-    
+    @Value("${config.security.oauth.client.id}")
+    private  String client_id;
+    @Value("${config.security.oauth.client.secret}")
+    private  String client_secret;
+    @Value("${config.security.oauth.jwt.key}")
+    private  String jwt_key;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
@@ -50,8 +58,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         
         clients.inMemory().
-                withClient("frontendapp").
-                secret(bCryptPasswordEncoder.encode("12345")).
+                withClient(client_id).
+                secret(bCryptPasswordEncoder.encode(client_secret)).
                 scopes("read", "write").
                 authorizedGrantTypes("password", "refresh_token").
                 accessTokenValiditySeconds(3600).
@@ -76,7 +84,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
-        tokenConverter.setSigningKey("algun_codigo_secreto_aeiou");
+        tokenConverter.setSigningKey(jwt_key);
         return tokenConverter;
     }
     
