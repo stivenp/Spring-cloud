@@ -7,7 +7,7 @@ spring:
     zipkin:
       base-url: http://localhost9411
       sender:
-       type: web
+       type: rabbit
       service:
        name: ${spring.application.name}  
     sleuth:
