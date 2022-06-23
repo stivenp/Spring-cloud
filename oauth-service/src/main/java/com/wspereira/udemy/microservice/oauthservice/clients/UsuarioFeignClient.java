@@ -24,5 +24,5 @@ public interface UsuarioFeignClient {
     public UserDe findByUsername(@RequestParam(name = "name") String name);
 
     @PutMapping("user/{id}")
-    public UserDe update(@RequestBody UserDe usuario, @PathVariable Long id);
+    public UserDe update(@RequestBody UserDe usuario, @PathVariable(name="id") Long id);
 }
