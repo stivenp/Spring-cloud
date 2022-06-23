@@ -110,4 +110,9 @@ resilience4j:
                base-config: defecto 
                 
         
-        
+logging:
+    file: ./logs/gestion-authenticacion.log
+    level:
+        com.wspereira.udemy.microservice.apigateway: DEBUG
+        org.springframewor.jdbc.core.JdbcTemplate: DEBUG
+        org.springframewor.jdbc.core.StatementCreatorUtils: TRACE        

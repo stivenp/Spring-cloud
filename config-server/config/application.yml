@@ -9,4 +9,9 @@ spring:
         git:
           default-label: master 
           uri: https://github.com/stivenp/config.git      
- 
+logging:
+    file: ./logs/gestion-authenticacion.log
+    level:
+        com.wspereira.udemy.microservice.configserver: DEBUG
+        org.springframewor.jdbc.core.JdbcTemplate: DEBUG
+        org.springframewor.jdbc.core.StatementCreatorUtils: TRACE      

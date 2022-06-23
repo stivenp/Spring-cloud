@@ -1,7 +1,17 @@
 spring:
   application:
     name: product-service
+  config:
+        import: "optional:configserver:"      
+      
 server.port: ${PORT:0}
 eureka:
     client.service-url.defaultZone : http://localhost:8090/eureka
     instance.instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+logging:
+    file: ./logs/gestion-authenticacion.log
+    level:
+        com.wspereira.udemy.microservice.productservice: DEBUG
+        org.springframewor.jdbc.core.JdbcTemplate: DEBUG
+        org.springframewor.jdbc.core.StatementCreatorUtils: TRACE      

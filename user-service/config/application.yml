@@ -9,4 +9,13 @@ eureka:
     #creando una intancia randon en eureka por cada instancia levantada
     instance.instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}    
    
-logging:level:org:hibernate:SQL: debug
+
+logging:
+    file: ./logs/gestion-authenticacion.log
+    level:
+        com.wspereira.udemy.microservice.productservice: DEBUG
+        org:
+            springframewor.jdbc.core:
+                                 JdbcTemplate: DEBUG
+                                 StatementCreatorUtils: TRACE  
+            hibernate:SQL: debug

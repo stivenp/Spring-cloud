@@ -50,3 +50,9 @@ resilience4j:
 #ribbon:
 #  ConnectTimeout: 3000
 #  ReadTimeout: 60000
+logging:
+    file: ./logs/gestion-authenticacion.log
+    level:
+        com.wspereira.udemy.microservice.itemservice: DEBUG
+        org.springframewor.jdbc.core.JdbcTemplate: DEBUG
+        org.springframewor.jdbc.core.StatementCreatorUtils: TRACE  
