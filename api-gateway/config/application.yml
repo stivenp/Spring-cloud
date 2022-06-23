@@ -5,6 +5,8 @@ spring:
     #nombre de la aplicacion con que se registrara en eureka
     application:
         name: gatteway-server
+    config:
+        import: "optional:configserver:"    
     cloud: 
        #configurando rutas de gateway 
        gateway: 

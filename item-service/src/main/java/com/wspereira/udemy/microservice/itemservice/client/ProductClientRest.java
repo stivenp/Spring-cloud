@@ -40,5 +40,5 @@ public interface ProductClientRest {
     
     @DeleteMapping("/products/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) ;
+    public void delete(@PathVariable(value = "id") Long id) ;
 }
