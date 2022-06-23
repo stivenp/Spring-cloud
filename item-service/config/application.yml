@@ -1,5 +1,7 @@
 #archivo para darle nome a la aplicaciòn. este nombre servira para recconocerlo en eureka
 spring:
+  sleuth:sampler:probability: 1.0
+  zipkin:base-url: http://localhost:9411/
   application:
     name: item-service
   #config.import: optional:configserver  

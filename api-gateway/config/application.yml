@@ -1,7 +1,18 @@
 server.port: 8092
 #Conectarse al cliente eureka servidor de registro y descubrimiento
 eureka.client.service-url.defaultZone : http://localhost:8090/eureka
+eureka.instance.prefer-ip-address: true
+eureka.instance.hostname: localhost
 spring:
+    zipkin:
+      base-url: http://localhost9411
+      sender:
+       type: web
+      service:
+       name: ${spring.application.name}  
+    sleuth:
+     sampler:
+      probability: 1 
     #nombre de la aplicacion con que se registrara en eureka
     application:
         name: gatteway-server
