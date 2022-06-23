@@ -31,7 +31,7 @@ public class AuthenticationSuccesErrorHandler implements AuthenticationEventPubl
     @Override
     public void publishAuthenticationSuccess(Authentication authentication) {
 
-        if (authentication.getPrincipal() instanceof WebAuthenticationDetails) {
+        if (authentication.getDetails() instanceof WebAuthenticationDetails) {
             return;
         }
         UserDetails user = (UserDetails) authentication.getPrincipal();

@@ -23,6 +23,6 @@ public interface UsuarioFeignClient {
     @GetMapping("/user/search/findUser")
     public UserDe findByUsername(@RequestParam(name = "name") String name);
 
-    @PutMapping("user/{id}")
+    @PutMapping("/user/{id}")
     public UserDe update(@RequestBody UserDe usuario, @PathVariable(name="id") Long id);
 }

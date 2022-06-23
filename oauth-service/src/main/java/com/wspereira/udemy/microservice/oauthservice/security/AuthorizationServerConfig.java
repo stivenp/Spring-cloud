@@ -6,6 +6,7 @@
 package com.wspereira.udemy.microservice.oauthservice.security;
 
 import java.util.Arrays;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -84,7 +85,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
-        tokenConverter.setSigningKey(jwt_key);
+     
+        tokenConverter.setSigningKey(Base64.encodeBase64String(jwt_key.getBytes()));
         return tokenConverter;
     }
     

@@ -36,10 +36,7 @@ public class UserService implements IUserService, UserDetailsService {
         try {
 
             UserDe usuario = client.findByUsername(username);
-            if (usuario == null) {
-                log.error("Error en el login, No existe el usuario {}", username);
-                throw new UsernameNotFoundException("Error en el login, No existe el usuario '" + username + "'en el sistema");
-            }
+            
             List<GrantedAuthority> authorities = usuario.getRoles()
                     .stream()
                     .map(role -> new SimpleGrantedAuthority(role.getName()))

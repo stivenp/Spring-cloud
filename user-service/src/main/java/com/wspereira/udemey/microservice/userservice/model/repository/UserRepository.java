@@ -16,7 +16,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
  * @author stive
  */
 @RepositoryRestResource(path="user")
-public interface UserRepository extends CrudRepository<User, Object> {
+public interface UserRepository extends CrudRepository<User, Long> {
   @RestResource(path="findUser")
     public User findByUsername(@Param("name") String username);
     
