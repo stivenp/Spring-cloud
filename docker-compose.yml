@@ -1,28 +1,113 @@
-version: "3"
+version: "3.7"
 services:
-  rabbitmq:
-    image: rabbitmq:3.7.6-management
-    container_name: rabbitmq
+  # ------Configurando Servicio config server centralizado  --------------------------------------------
+  config-server:
+    image: wspereira07/config-server:v1
     ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      - "TZ=@timezone@"
+      - "8888:8888"
+    restart: always
     networks:
-      - local
+      - springcloud
+  #-- Configurando servicio eureka-server que funcionara como registro y descubrimiento de applicaciones
+  eureka-server:
+    image: wspereira07/eureka-server:v1
+    ports:
+      - "8090:8090"
+    restart: always
+    networks:
+      - springcloud    
+  #-- configurando mysql para que lo utilice el servicio de productos
+  mysql8-product-service:
+    build:
+      context: ./mysql/product-service/
+      dockerfile: Dockerfile
+    container_name: mysql8-product-service
+    ports:
+      - "3307:3306"
+    restart: always
+    networks:
+      - springcloud
+    environment: 
+      #MYSQL_DATABASE: db_springboot_cloud
+      MYSQL_ROOT_PASSWORD: sasa
+  # configurando postgres para los usuarios 
+  mysql8-user-service:
+    build:
+      context: ./mysql/user-service
+      dockerfile: Dockerfile
+    container_name: mysql8-user-service
+    ports:
+      - "3308:3306"
+    restart: always
+    networks:
+      - springcloud
+    environment: 
+      #MYSQL_DATABASE: db_springboot_cloud
+      MYSQL_ROOT_PASSWORD: sasa
+  # configurando servicio product-service 
+  product-service:
+    image: wspereira07/product-service:v1
+    restart: always
+    networks:
+      - springcloud
+    depends_on: 
+      - config-server
+      - eureka-server
+      - mysql8-product-service
+  #Configurando servicio item-services
+  item-service:
+    image: wspereira07/item-service:v1
+    restart: always
+    networks:
+      - springcloud
+    depends_on: 
+      - config-server
+      - eureka-server
+      - product-service
+  # Configurando servicio usuario de authenticacion para
+  user-service:
+    image: wspereira07/user-service:v1
+    restart: always
+    networks:
+      - springcloud
+    depends_on: 
+      - config-server
+      - eureka-server
+      - mysql8-user-service
 
-  zipkin:
-    image: openzipkin/zipkin:2.10.2
-    container_name: zipkin
-    depends_on:
-      - rabbitmq
+  # configurando servicio de  spring security y jwt
+  oauth-service:
+    image: wspereira07/oauth-service:v1
+    ports:
+      - "9100:9100"
+    restart: always
+    networks:
+      - springcloud
+    depends_on: 
+      - config-server
+      - eureka-server
+      - user-service  
+  #Configurando servicio de rabbitmq
+  microservicios-rabbitmq38:
+    image: rabbitmq:3.8-management-alpine
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    restart: always
+    networks:
+      - springcloud
+# configurando servicio de zipkin para trazabilidad
+  zipkin-server:
+    image: openzipkin/zipkin
     ports:
       - "9411:9411"
-    environment:
-      - "TZ=@timezone@"
-      - "RABBIT_URI=amqp://guest:guest@rabbitmq:5672"
+    restart: always
     networks:
-      - local
+      - springcloud
+    depends_on: 
+      - microservicios-rabbitmq38
+    environment: 
+      RABBIT_ADDRESSES: microservicios-rabbitmq38:5672
 
 networks:
-  local:
+  springcloud:

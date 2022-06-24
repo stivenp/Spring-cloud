@@ -90,6 +90,7 @@
         </dependencies>
     </dependencyManagement>
     <build>
+         <finalName>item-service</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

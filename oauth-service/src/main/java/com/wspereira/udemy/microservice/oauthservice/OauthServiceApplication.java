@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableEurekaClient
 @SpringBootApplication
 @Slf4j
+
 public class OauthServiceApplication implements CommandLineRunner {
 
     @Autowired

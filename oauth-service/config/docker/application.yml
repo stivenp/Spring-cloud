@@ -1,7 +1,7 @@
 server.port: 9100
-spring:
+spring:  
   config:
-    use-legacy-processing: true   
+    use-legacy-processing: true    
     import: "optional:configserver:"
   #nombre de la aplicacion con que se registrara en eureka
   application:
@@ -9,7 +9,7 @@ spring:
 
 eureka:
   #donde esta ubicado nuestro servicio eureka para registrarse y descubrimiento
-  client.service-url.defaultZone: http://localhost:8090/eureka
+  client.service-url.defaultZone: http://eureka-server:8090/eureka
   #creando una intancia randon en eureka por cada instancia levantada
   #instance.instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 

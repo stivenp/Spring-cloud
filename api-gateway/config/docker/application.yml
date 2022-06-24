@@ -1,6 +1,6 @@
 server.port: 8092
 #Conectarse al cliente eureka servidor de registro y descubrimiento
-eureka.client.service-url.defaultZone: http://localhost:8090/eureka
+eureka.client.service-url.defaultZone: http://eureka-server:8090/eureka
 spring:
   config:
         use-legacy-processing: true 

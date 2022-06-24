@@ -1,6 +1,5 @@
 server.port: 8888
-
-spring:
+spring: 
     config.use-legacy-processing: true
     #nombre de la aplicacion con que se registrara en eureka
     application:
