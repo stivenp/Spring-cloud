@@ -1,5 +1,5 @@
 # Derived from official mysql image (our base image)
-FROM mysql:8
+FROM mysql:5.7
 # Add a database
 ENV MYSQL_DATABASE db_springboot_cloud
 # Add the content of the sql-scripts/ directory to your image

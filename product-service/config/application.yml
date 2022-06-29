@@ -6,7 +6,7 @@ spring:
     name: product-service
   
 
-server.port: ${PORT:0}
+server.port: 8020
 eureka:
   client.service-url.defaultZone: http://localhost:8090/eureka
   instance.instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}

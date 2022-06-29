@@ -6,6 +6,7 @@ CREATE TABLE `usuarios` (
   `enabled` tinyint(1) DEFAULT NULL,
   `name` text DEFAULT NULL,  
   `email` text DEFAULT NULL,
+  `intentos` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8
 

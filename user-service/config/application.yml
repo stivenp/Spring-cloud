@@ -1,4 +1,4 @@
-server.port: ${PORT:0}
+server.port: 8010
 spring:
   config.use-legacy-processing: true   
   #nombre de la aplicacion con que se registrara en eureka
@@ -6,14 +6,16 @@ spring:
     name: user-service
 eureka:
   #donde esta ubicado nuestro servicio eureka para registrarse y descubrimiento
-  client.service-url.defaultZone: http://localhost:8090/eureka
+  client:
+    service-url.defaultZone: http://localhost:8090/eureka
+    
   #creando una intancia randon en eureka por cada instancia levantada
   instance.instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 logging:
   file: ./logs/gestion-authenticacion.log
   level:
-    com.wspereira.udemy.microservice.productservice: DEBUG
+    com.wspereira.udemey.microservice.userservice: DEBUG
     org:
       springframewor.jdbc.core:
         JdbcTemplate: DEBUG

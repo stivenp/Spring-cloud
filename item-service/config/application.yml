@@ -5,7 +5,7 @@ spring:
      name: item-service
   #config.import: optional:configserver
 #haciendo que el puerto sea random cada vez que arranca la app
-server.port: ${PORT:0}
+server.port: 8030
 eureka:
   #donde esta ubicado nuestro servicio eureka para registrarse y descubrimiento
   client.service-url.defaultZone: http://localhost:8090/eureka
